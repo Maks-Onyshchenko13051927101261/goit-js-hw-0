@@ -1,39 +1,41 @@
-const feetbackForm = document.querySelector('.feedback-form');
-let formData = {};
+const feetbackFormEl = document.querySelector(".feedback-form");
+let formData = {
+  email: "",
+  message: "",
+};
 
-const fillForm = () => {
-  const elFromFormData = JSON.parse(localStorage.getItem('feedback'));
+const fillFormEl = () => {
+  const formDataLS = JSON.parse(localStorage.getItem("feedback-form-state"));
 
-  if (elFromFormData === null) {
+  if (formDataLS === null) {
     return;
   }
-  for (const key in elFromFormData) {
-    if (elFromFormData.hasOwnProperty(key)) {
-      feetbackForm.elements[key].value = elFromFormData[key];
+  for (const key in formDataLS) {
+    if (formDataLS.hasOwnProperty(key)) {
+      feetbackFormEl.elements[key].value = formDataLS[key];
     }
   }
 };
 
-fillForm();
+fillFormEl();
 
-const onFormField = event => {
-  const fieldName = event.target.name;
-  const fieldValue = event.target.value;
+const onFormField = (event) => {
+  const { name, value } = event.target;
+  formData[name] = value.trim();
 
-  formData[fieldName] = fieldValue;
-
-  localStorage.setItem('feedback', JSON.stringify(formData));
+  localStorage.setItem("feedback-form-state", JSON.stringify(formData));
 };
 
-const onFeedbackSubmit = event => {
-  event.preventDefoult();
-  if (event.target.value === '') {
-    return alert('Fill please all fields');
+const onFeedbackSubmit = (event) => {
+  event.preventDefault();
+  if (formData.email === "" || formData.message === "") {
+    return alert("Fill please all fields");
   }
 
   event.target.reset();
-  localStorage.removeItem('feedback');
+  console.log(formData);
+  localStorage.removeItem("feedback-form-state");
 };
 
-feetbackForm.addEventListener('input', onFormField);
-feetbackForm.addEventListener('submit', onFeedbackSubmit);
+feetbackFormEl.addEventListener("input", onFormField);
+feetbackFormEl.addEventListener("submit", onFeedbackSubmit);
